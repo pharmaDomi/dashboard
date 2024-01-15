@@ -52,96 +52,100 @@ const UsersList = () => {
   const handlePhoneChange = (e) => {
     setFilters({ ...filters, phone: e.target.value })
   }
+
   useEffect(() => {
     filterAndSearch()
   }, [filters])
 
   const filterAndSearch = () => {
-    let filteredData = [...pharmacies] // Replace 'users' with your pharmacy data array
+    let filteredData = [...pharmacies]
 
     // Apply filters for name, owner, and phone number
     filteredData = filteredData.filter(
       (pharmacy) =>
         pharmacy.name.toLowerCase().includes(filters.name.toLowerCase()) &&
         pharmacy.owner.toLowerCase().includes(filters.owner.toLowerCase()) &&
-        pharmacy.phoneNumber.includes(filters.phoneNumber),
+        pharmacy.phone?.includes(filters.phone),
     )
 
-    setFilteredPharmacies(filteredData) // Assuming setFilteredPharmacies is the state updater for filtered pharmacies
+    setFilteredPharmacies(filteredData)
   }
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Pharma-Domi Users</strong>
+            <strong>Pharma-Domi Pharmacies</strong>
           </CCardHeader>
           <CCardBody>
-            <p className="text-medium-emphasis small">write some here</p>
-            <CTable hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col"></CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <CInputGroup className="mb-3">
-                      <CFormInput
-                        placeholder="search by Pharmacy name"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        onChange={handleNameChange}
-                      />
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"></CTableHeaderCell>
+            <div className="table-responsive">
+              <CTable hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col"></CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          placeholder="search by Pharmacy name"
+                          aria-label="Username"
+                          aria-describedby="basic-addon1"
+                          onChange={handleNameChange}
+                        />
+                      </CInputGroup>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          placeholder="search by owner name"
+                          aria-label="Username"
+                          aria-describedby="basic-addon1"
+                          onChange={handleOwnerChange}
+                        />
+                      </CInputGroup>
+                    </CTableHeaderCell>
 
-                  <CTableHeaderCell scope="col">
-                    <CInputGroup className="mb-3">
-                      <CFormInput
-                        placeholder="search by Email"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        onChange={handlePhoneChange}
-                      />
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <CInputGroup className="mb-3">
-                      <CFormInput
-                        placeholder="search by phone number"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        onChange={handleOwnerChange}
-                      />
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col"></CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col"> Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Location</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">phone number</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Owner</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {filteredPharmacies?.map((pharmacy, index) => (
-                  <CTableRow key={index}>
-                    <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                    <CTableDataCell>{pharmacy.name}</CTableDataCell>
-                    <CTableDataCell>
-                      {pharmacy.latitude}, {pharmacy.longitude}
-                    </CTableDataCell>
-                    <CTableDataCell>{pharmacy.owner}</CTableDataCell>
-                    <CTableDataCell>{pharmacy.phone}</CTableDataCell>
-                    <CTableDataCell>Actions...</CTableDataCell>
+                    <CTableHeaderCell scope="col">
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          placeholder="search by phone number"
+                          aria-label="Username"
+                          aria-describedby="basic-addon1"
+                          onChange={handlePhoneChange}
+                        />
+                      </CInputGroup>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"></CTableHeaderCell>
+
+                    <CTableHeaderCell scope="col"></CTableHeaderCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
+                </CTableHead>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                    <CTableHeaderCell scope="col"> Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Owner</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">phone number</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Location</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {filteredPharmacies?.map((pharmacy, index) => (
+                    <CTableRow key={index}>
+                      <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                      <CTableDataCell>{pharmacy.name}</CTableDataCell>
+                      <CTableDataCell>{pharmacy.owner}</CTableDataCell>
+
+                      <CTableDataCell>{pharmacy.phone}</CTableDataCell>
+                      <CTableDataCell>
+                        {pharmacy.latitude}, {pharmacy.longitude}
+                      </CTableDataCell>
+                      <CTableDataCell>Actions...</CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>

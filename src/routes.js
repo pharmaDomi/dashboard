@@ -19,8 +19,6 @@ const Progress = React.lazy(() => import('./views/base/progress/Progress'))
 const Spinners = React.lazy(() => import('./views/base/spinners/Spinners'))
 const Tables = React.lazy(() => import('./views/base/tables/Tables'))
 const Tooltips = React.lazy(() => import('./views/base/tooltips/Tooltips'))
-const Users = React.lazy(() => import('./views/users/UsersList'))
-const Pharmacies = React.lazy(() => import('./views/pharmacies/pharmaciesList'))
 
 // Buttons
 const Buttons = React.lazy(() => import('./views/buttons/buttons/Buttons'))
@@ -51,6 +49,12 @@ const Modals = React.lazy(() => import('./views/notifications/modals/Modals'))
 const Toasts = React.lazy(() => import('./views/notifications/toasts/Toasts'))
 
 const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
+
+//users
+const Users = React.lazy(() => import('./views/users/UsersList'))
+//pharmacies
+const Pharmacies = React.lazy(() => import('./views/pharmacies/pharmaciesList'))
+const AddPharmacies = React.lazy(() => import('./views/pharmacies/addPharmacy'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -99,6 +103,7 @@ const routes = [
   { path: '/widgets', name: 'Widgets', element: Widgets },
   { path: '/users', name: 'users', element: Users },
   { path: '/pharmacies', name: 'pharmacies', element: Pharmacies },
+  { path: '/pharmacies/addPharmacy', name: 'Add a new pharmacies', element: AddPharmacies },
 ]
 
 export default routes

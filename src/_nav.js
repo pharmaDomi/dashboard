@@ -61,6 +61,12 @@ const _nav = [
     icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
   },
   {
+    component: CNavItem,
+    name: 'Add a new pharmacy',
+    to: '/pharmacies/addPharmacy',
+    icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
+  },
+  {
     component: CNavTitle,
     name: 'Components',
   },

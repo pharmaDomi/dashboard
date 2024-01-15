@@ -97,109 +97,112 @@ const UsersList = () => {
             <strong>Pharma-Domi Users</strong>
           </CCardHeader>
           <CCardBody>
-            <p className="text-medium-emphasis small">write some here</p>
-            <CTable hover>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col"></CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <CInputGroup className="mb-3">
-                      <CFormInput
-                        placeholder="search by Full name"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        onChange={handleFullNameChange}
-                      />
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <CInputGroup className="mb-3">
-                      <CFormInput
-                        placeholder="search by Email"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        onChange={handleEmailChange}
-                      />
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <CInputGroup className="mb-3">
-                      <CFormInput
-                        placeholder="search by phone number"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        onChange={handlePhoneNumberChange}
-                      />
-                    </CInputGroup>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <div className="d-flex flex-column">
-                      <div className="d-flex flex-row">
-                        <div className="mt-3">min:</div>
-                        <CTableHeaderCell scope="col">
-                          <CInputGroup className="mb-1 ">
-                            <CFormInput
-                              type="number"
-                              aria-label="Username"
-                              aria-describedby="basic-addon1"
-                              onChange={handleMinAgeChange}
-                              min={0}
-                            />
-                          </CInputGroup>
-                        </CTableHeaderCell>
+            <div className="table-responsive">
+              <CTable hover>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col"></CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          placeholder="search by Full name"
+                          aria-label="Username"
+                          aria-describedby="basic-addon1"
+                          onChange={handleFullNameChange}
+                        />
+                      </CInputGroup>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          placeholder="search by Email"
+                          aria-label="Username"
+                          aria-describedby="basic-addon1"
+                          onChange={handleEmailChange}
+                        />
+                      </CInputGroup>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <CInputGroup className="mb-3">
+                        <CFormInput
+                          placeholder="search by phone number"
+                          aria-label="Username"
+                          aria-describedby="basic-addon1"
+                          onChange={handlePhoneNumberChange}
+                        />
+                      </CInputGroup>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <div className="d-flex flex-column">
+                        <div className="d-flex flex-row">
+                          <div className="mt-3">min:</div>
+                          <CTableHeaderCell scope="col">
+                            <CInputGroup className="mb-1 ">
+                              <CFormInput
+                                type="number"
+                                aria-label="Username"
+                                aria-describedby="basic-addon1"
+                                onChange={handleMinAgeChange}
+                                min={0}
+                              />
+                            </CInputGroup>
+                          </CTableHeaderCell>
+                        </div>
+                        <div className="d-flex flex-row">
+                          <div className="mt-3"> max:</div>
+                          <CTableHeaderCell scope="col">
+                            <CInputGroup className="mb-1 ">
+                              <CFormInput
+                                type="number"
+                                aria-label="Username"
+                                aria-describedby="basic-addon1"
+                                onChange={handleMaxAgeChange}
+                                min={0}
+                              />
+                            </CInputGroup>
+                          </CTableHeaderCell>
+                        </div>
                       </div>
-                      <div className="d-flex flex-row">
-                        <div className="mt-3"> max:</div>
-                        <CTableHeaderCell scope="col">
-                          <CInputGroup className="mb-1 ">
-                            <CFormInput
-                              type="number"
-                              aria-label="Username"
-                              aria-describedby="basic-addon1"
-                              onChange={handleMaxAgeChange}
-                              min={0}
-                            />
-                          </CInputGroup>
-                        </CTableHeaderCell>
-                      </div>
-                    </div>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    <CFormSelect aria-label="Default select example" onChange={handleGenderChange}>
-                      <option>filter by gender</option>
-                      <option value="">All</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                    </CFormSelect>
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableHead>
-                <CTableRow>
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Full Name</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Email</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Age</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                {filteredUsers.map((user, index) => (
-                  <CTableRow key={index}>
-                    <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
-                    <CTableDataCell>{user.fullName}</CTableDataCell>
-                    <CTableDataCell>{user.email}</CTableDataCell>
-                    <CTableDataCell>{user.phoneNumber}</CTableDataCell>
-                    <CTableDataCell>{user.age}</CTableDataCell>
-                    <CTableDataCell>{user.gender}</CTableDataCell>
-                    <CTableDataCell>Actions...</CTableDataCell>
+                    </CTableHeaderCell>
+                    <CTableHeaderCell scope="col">
+                      <CFormSelect
+                        aria-label="Default select example"
+                        onChange={handleGenderChange}
+                      >
+                        <option>filter by gender</option>
+                        <option value="">All</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                      </CFormSelect>
+                    </CTableHeaderCell>
                   </CTableRow>
-                ))}
-              </CTableBody>
-            </CTable>
+                </CTableHead>
+                <CTableHead>
+                  <CTableRow>
+                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Full Name</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Email</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Age</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Gender</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
+                  </CTableRow>
+                </CTableHead>
+                <CTableBody>
+                  {filteredUsers.map((user, index) => (
+                    <CTableRow key={index}>
+                      <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
+                      <CTableDataCell>{user.fullName}</CTableDataCell>
+                      <CTableDataCell>{user.email}</CTableDataCell>
+                      <CTableDataCell>{user.phoneNumber}</CTableDataCell>
+                      <CTableDataCell>{user.age}</CTableDataCell>
+                      <CTableDataCell>{user.gender}</CTableDataCell>
+                      <CTableDataCell>Actions...</CTableDataCell>
+                    </CTableRow>
+                  ))}
+                </CTableBody>
+              </CTable>
+            </div>
           </CCardBody>
         </CCard>
       </CCol>

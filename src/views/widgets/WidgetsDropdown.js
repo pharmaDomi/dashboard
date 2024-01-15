@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   CRow,
   CCol,
@@ -12,8 +12,51 @@ import { getStyle } from '@coreui/utils'
 import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
+import axios from 'axios'
 
 const WidgetsDropdown = () => {
+  const [users, setUsers] = useState([])
+  useEffect(() => {
+    // Function to fetch users
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:3117/dashboard/users')
+        setUsers(response.data.users)
+      } catch (error) {
+        console.error('Error fetching users:', error)
+        // Handle error states if needed
+      }
+    }
+
+    // Call the function to fetch users
+    fetchUsers()
+    const usersByMonthList = countUsersByMonth(users)
+    console.log(usersByMonthList)
+  }, [])
+
+  //retrive users by month
+  const countUsersByMonth = (users) => {
+    const monthCounts = {}
+
+    users.forEach((user) => {
+      const joinedDate = new Date(user.joinedAt)
+      const month = joinedDate.toLocaleString('default', { month: 'long' })
+
+      if (!monthCounts[month]) {
+        monthCounts[month] = 1
+      } else {
+        monthCounts[month]++
+      }
+    })
+
+    const usersByMonthArray = Object.entries(monthCounts).map(([month, count]) => ({
+      month,
+      count,
+    }))
+
+    return usersByMonthArray
+  }
+
   return (
     <CRow>
       <CCol sm={6} lg={3}>
@@ -22,7 +65,7 @@ const WidgetsDropdown = () => {
           color="primary"
           value={
             <>
-              216{' '}
+              {users.length}{' '}
               <span className="fs-6 fw-normal">
                 (-12.4% <CIcon icon={cilArrowBottom} />)
               </span>
