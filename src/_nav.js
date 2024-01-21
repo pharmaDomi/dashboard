@@ -55,15 +55,37 @@ const _nav = [
     name: 'Pharmacies',
   },
   {
-    component: CNavItem,
-    name: 'pharmacies',
+    component: CNavGroup,
+    name: 'Pharmacies',
     to: '/pharmacies',
+    icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Pharmacies List',
+        to: '/pharmacies',
+      },
+      {
+        component: CNavItem,
+        name: 'Add a new Pharmacy',
+        to: '/pharmacies/addPharmacy',
+      },
+    ],
+  },
+  {
+    component: CNavTitle,
+    name: 'Deliveries',
+  },
+  {
+    component: CNavItem,
+    name: 'Deliveries',
+    to: '/deliveries',
     icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Add a new pharmacy',
-    to: '/pharmacies/addPharmacy',
+    name: 'add delivery person ',
+    to: '/deliveries/addDeliveryPerson',
     icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
   },
   {
