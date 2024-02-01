@@ -23,16 +23,28 @@ const AddDeliveryPerson = () => {
     vehicleType: '',
   })
 
+  const [loading, setLoading] = useState(false)
+
   const handleInputChange = (event) => {
     const { name, value } = event.target
     setDeliveryPersonData({ ...deliveryPersonData, [name]: value })
   }
 
+  const showErrorAlert = (message) => {
+    alert(`Error: ${message}`)
+  }
+
+  const showSuccessAlert = (message) => {
+    alert(`Success: ${message}`)
+  }
+
   const handleSubmit = async () => {
     try {
+      setLoading(true)
+
       const isAnyFieldEmpty = Object.values(deliveryPersonData).some((value) => value === '')
       if (isAnyFieldEmpty) {
-        alert('Please fill in all fields')
+        showErrorAlert('Please fill in all fields')
         return
       }
 
@@ -43,28 +55,30 @@ const AddDeliveryPerson = () => {
       console.log('Response:', response.data)
 
       // Show success message
-      alert('Delivery person added successfully!')
+      showSuccessAlert('Delivery person added successfully!')
 
       // Reset form fields after successful submission
       setDeliveryPersonData({
+        cin: '',
         fullName: '',
         email: '',
         phoneNumber: '',
         address: '',
         vehicleType: '',
-        cin: '',
       })
     } catch (error) {
       console.error('Error adding delivery person:', error.response.data.error)
 
       // Show specific error message based on the error status
       if (error.response.status === 400) {
-        alert('Phone number should be 8 digits.')
+        showErrorAlert('Phone number and cin should be 8 digits.')
       } else if (error.response.status === 409) {
-        alert('Delivery person with the same email already exists.')
+        showErrorAlert('Delivery person with the same email already exists.')
       } else {
-        alert('Error adding delivery person. Please try again.')
+        showErrorAlert('Error adding delivery person. Please try again.')
       }
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -147,8 +161,8 @@ const AddDeliveryPerson = () => {
             {/* Add other form fields as needed */}
           </CCardBody>
         </CCard>
-        <CButton className="m-3" color="primary" onClick={handleSubmit}>
-          Add
+        <CButton className="m-3" color="primary" onClick={handleSubmit} disabled={loading}>
+          {loading ? 'Adding...' : 'Add'}
         </CButton>
         <CButton
           className="m-3"

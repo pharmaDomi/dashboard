@@ -77,17 +77,25 @@ const _nav = [
     name: 'Deliveries',
   },
   {
-    component: CNavItem,
+    component: CNavGroup,
     name: 'Deliveries',
-    to: '/deliveries',
     icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
+    items: [
+      { component: CNavItem, name: 'Deliveries', to: '/deliveries/all' },
+
+      {
+        component: CNavItem,
+        name: 'Delivery people ',
+        to: '/deliveries/deliveryPeople',
+      },
+      {
+        component: CNavItem,
+        name: 'Add delivery person ',
+        to: '/deliveries/addDeliveryPerson',
+      },
+    ],
   },
-  {
-    component: CNavItem,
-    name: 'add delivery person ',
-    to: '/deliveries/addDeliveryPerson',
-    icon: <CIcon icon={cilMedicalCross} customClassName="nav-icon" />,
-  },
+
   {
     component: CNavTitle,
     name: 'Components',
