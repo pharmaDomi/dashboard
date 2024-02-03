@@ -123,6 +123,7 @@ const DeliveriesList = () => {
                         />
                       </CInputGroup>
                     </CTableHeaderCell>
+                    <CTableHeaderCell scope="col"></CTableHeaderCell>
                     <CTableHeaderCell scope="col">
                       <CInputGroup className="mb-3">
                         <CFormInput
@@ -133,7 +134,6 @@ const DeliveriesList = () => {
                       </CInputGroup>
                     </CTableHeaderCell>
                     <CTableHeaderCell scope="col"></CTableHeaderCell>
-                    <CTableHeaderCell scope="col"></CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableHead>
@@ -142,7 +142,9 @@ const DeliveriesList = () => {
                     <CTableHeaderCell scope="col">Items</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Delivery Person</CTableHeaderCell>
                     <CTableHeaderCell scope="col">From Pharmacy</CTableHeaderCell>
+                    <CTableHeaderCell scope="col">Requested By</CTableHeaderCell>
                     <CTableHeaderCell scope="col">Status</CTableHeaderCell>
+
                     <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
@@ -153,6 +155,7 @@ const DeliveriesList = () => {
                       <CTableDataCell>{delivery.items.join(', ')}</CTableDataCell>
                       <CTableDataCell>{delivery.deliveryPerson.name}</CTableDataCell>
                       <CTableDataCell>{delivery.fromPharmacy.name}</CTableDataCell>
+                      <CTableDataCell>{delivery.requestedBy}</CTableDataCell>
                       <CTableDataCell>{delivery.status}</CTableDataCell>
                       <CTableDataCell>Actions...</CTableDataCell>
                     </CTableRow>

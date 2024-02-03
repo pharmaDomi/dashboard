@@ -16,6 +16,8 @@ import axios from 'axios'
 
 const WidgetsDropdown = () => {
   const [users, setUsers] = useState([])
+  const [pharmacies, setPharmacies] = useState([])
+
   useEffect(() => {
     // Function to fetch users
     const fetchUsers = async () => {
@@ -28,11 +30,23 @@ const WidgetsDropdown = () => {
       }
     }
 
+    //fetch pharmacies
+    const fetchPharmacies = async () => {
+      try {
+        const response = await axios.get('http://localhost:3117/pharmacies/')
+        setPharmacies(response.data)
+        console.log(response.data)
+      } catch (error) {
+        console.error('Error fetching Pharmacies:', error)
+        // Handle error states if needed
+      }
+    }
     // Call the function to fetch users
     fetchUsers()
+    fetchPharmacies()
     const usersByMonthList = countUsersByMonth(users)
     console.log(usersByMonthList)
-  }, [])
+  }, [pharmacies, users])
 
   //retrive users by month
   const countUsersByMonth = (users) => {
@@ -259,13 +273,13 @@ const WidgetsDropdown = () => {
               className="mt-3"
               style={{ height: '70px' }}
               data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: pharmacies.map((pharmacy) => pharmacy.name),
                 datasets: [
                   {
-                    label: 'My First dataset',
+                    label: 'Number of deliveries',
                     backgroundColor: 'rgba(255,255,255,.2)',
                     borderColor: 'rgba(255,255,255,.55)',
-                    data: [78, 81, 80, 45, 34, 12, 40],
+                    data: pharmacies.map((pharmacy, index) => pharmacy.deliveries.length),
                     fill: true,
                   },
                 ],
