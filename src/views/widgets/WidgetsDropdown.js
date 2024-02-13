@@ -46,28 +46,7 @@ const WidgetsDropdown = () => {
     fetchPharmacies()
     const usersByMonthList = countUsersByMonth(users)
     console.log(usersByMonthList)
-  }, [])
-  const countUsersBMonth = (users) => {
-    const monthCounts = {}
-    console.log(users)
-    users.forEach((user) => {
-      const joinedDate = new Date(user.joinedAT)
-      const month = joinedDate.toLocaleString('default', { month: 'long' })
-
-      if (!monthCounts[month]) {
-        monthCounts[month] = 1
-      } else {
-        monthCounts[month]++
-      }
-    })
-
-    const usersByMonthArray = Object.entries(monthCounts).map(([month, count]) => ({
-      month,
-      count,
-    }))
-    console.log(usersByMonthArray)
-    return usersByMonthArray
-  }
+  })
 
   //retrive users by month
   const countUsersByMonth = (users) => {
