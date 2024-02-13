@@ -53,7 +53,7 @@ const DeliveryPeopleList = () => {
 
   useEffect(() => {
     filterAndSearch()
-  }, [filters])
+  })
 
   const filterAndSearch = () => {
     let filteredData = [...deliveryPeople]

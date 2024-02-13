@@ -66,7 +66,7 @@ const DeliveriesList = () => {
 
   useEffect(() => {
     filterAndSearch()
-  }, [filters])
+  })
 
   const filterAndSearch = () => {
     let filteredData = [...deliveries]

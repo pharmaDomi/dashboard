@@ -55,7 +55,7 @@ const UsersList = () => {
 
   useEffect(() => {
     filterAndSearch()
-  }, [filters])
+  })
 
   const filterAndSearch = () => {
     let filteredData = [...pharmacies]
