@@ -31,9 +31,9 @@ const DeliveriesList = () => {
     const fetchDeliveries = async () => {
       try {
         const response = await axios.get('http://localhost:3117/deliveries')
-        setDeliveries(response.data)
-        setFilteredDeliveries(response.data)
-        console.log(response.data)
+        setDeliveries(response.data.deliveries)
+        setFilteredDeliveries(response.data.deliveries)
+        console.log(response.data.deliveries)
       } catch (error) {
         console.error('Error fetching deliveries:', error)
         // Handle error states if needed
@@ -153,8 +153,8 @@ const DeliveriesList = () => {
                     <CTableRow key={index}>
                       <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                       <CTableDataCell>{delivery.items.join(', ')}</CTableDataCell>
-                      <CTableDataCell>{delivery.deliveryPerson.name}</CTableDataCell>
-                      <CTableDataCell>{delivery.fromPharmacy.name}</CTableDataCell>
+                      <CTableDataCell>{delivery.deliveryPerson}</CTableDataCell>
+                      <CTableDataCell>{delivery.fromPharmacy}</CTableDataCell>
                       <CTableDataCell>{delivery.requestedBy}</CTableDataCell>
                       <CTableDataCell>{delivery.status}</CTableDataCell>
                       <CTableDataCell>Actions...</CTableDataCell>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
   CAvatar,
@@ -52,8 +52,110 @@ import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
+import axios from 'axios'
 
 const Dashboard = () => {
+  //
+  const [deliveries, setDeliveries] = useState([])
+
+  useEffect(() => {
+    // Fetch deliveries data from the server
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3117/deliveries') // Adjust the endpoint accordingly
+        setDeliveries(response.data.deliveries)
+      } catch (error) {
+        console.error('Error fetching deliveries:', error)
+      }
+    }
+
+    fetchData()
+  }, [])
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+  const aggregatedData = deliveries.reduce((result, delivery) => {
+    // Assuming 'date' property exists in the 'delivery' object
+    const deliveryDate = new Date(delivery.date)
+    const month = deliveryDate.getMonth()
+    const deliveryPersonId = delivery.deliveryPerson.toString()
+
+    if (!result[deliveryPersonId]) {
+      result[deliveryPersonId] = {}
+    }
+
+    if (!result[deliveryPersonId][month]) {
+      result[deliveryPersonId][month] = 0
+    }
+
+    result[deliveryPersonId][month]++
+
+    return result
+  }, {})
+
+  // Convert aggregated data to chart format
+  const chartData = {
+    labels: Object.keys(
+      (aggregatedData && aggregatedData[Object.keys(aggregatedData)[0]]) || {},
+    ).map((month) => monthNames[parseInt(month)]),
+    datasets: Object.keys(aggregatedData).map((personId) => ({
+      label: `Delivery Person ${personId}`,
+      backgroundColor: 'rgba(0,123,255,0.1)',
+      borderColor: 'rgba(0,123,255,1)',
+      pointHoverBackgroundColor: 'rgba(0,123,255,1)',
+      borderWidth: 1,
+      data: Object.values(aggregatedData[personId]),
+      fill: true,
+    })),
+  }
+
+  const chartOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          drawOnChartArea: false,
+        },
+      },
+      y: {
+        ticks: {
+          beginAtZero: true,
+          maxTicksLimit: 5,
+          stepSize: Math.ceil(250 / 5), // Adjust as needed
+          max: 250, // Adjust as needed
+        },
+      },
+    },
+    elements: {
+      line: {
+        tension: 0.4,
+      },
+      point: {
+        radius: 0,
+        hitRadius: 10,
+        hoverRadius: 4,
+        hoverBorderWidth: 3,
+      },
+    },
+  }
+
+  //
   const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const progressExample = [
@@ -288,6 +390,11 @@ const Dashboard = () => {
                 },
               },
             }}
+          />
+          <CChartLine
+            style={{ height: '300px', marginTop: '40px' }}
+            data={chartData}
+            options={chartOptions}
           />
         </CCardBody>
         <CCardFooter>
