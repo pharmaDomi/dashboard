@@ -17,7 +17,6 @@ import {
 import axios from 'axios'
 
 const DeliveriesList = () => {
-  const [deliveries, setDeliveries] = useState([])
   const [filteredDeliveries, setFilteredDeliveries] = useState([])
   const [filters, setFilters] = useState({
     items: '',
@@ -31,9 +30,8 @@ const DeliveriesList = () => {
     const fetchDeliveries = async () => {
       try {
         const response = await axios.get('http://localhost:3117/deliveries')
-        setDeliveries(response.data.deliveries)
-        setFilteredDeliveries(response.data.deliveries)
-        console.log(response.data.deliveries)
+        setFilteredDeliveries(response.data)
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching deliveries:', error)
         // Handle error states if needed
@@ -64,31 +62,12 @@ const DeliveriesList = () => {
     setFilters({ ...filters, status: e.target.value })
   }
 
-  useEffect(() => {
-    filterAndSearch()
-  })
-
-  const filterAndSearch = () => {
-    let filteredData = [...deliveries]
-
-    // Apply filters for items, delivery person, from pharmacy, and status
-    filteredData = filteredData.filter(
-      (delivery) =>
-        delivery.items.join(', ').toLowerCase().includes(filters.items.toLowerCase()) &&
-        delivery.deliveryPerson.name.toLowerCase().includes(filters.deliveryPerson.toLowerCase()) &&
-        delivery.fromPharmacy.name.toLowerCase().includes(filters.fromPharmacy.toLowerCase()) &&
-        delivery.status.toLowerCase().includes(filters.status.toLowerCase()),
-    )
-
-    setFilteredDeliveries(filteredData)
-  }
-
   return (
     <CRow>
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Delivery List</strong>
+            <strong>Deliveries List</strong>
           </CCardHeader>
           <CCardBody>
             <div className="table-responsive">
@@ -153,9 +132,9 @@ const DeliveriesList = () => {
                     <CTableRow key={index}>
                       <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                       <CTableDataCell>{delivery.items.join(', ')}</CTableDataCell>
-                      <CTableDataCell>{delivery.deliveryPerson}</CTableDataCell>
-                      <CTableDataCell>{delivery.fromPharmacy}</CTableDataCell>
-                      <CTableDataCell>{delivery.requestedBy}</CTableDataCell>
+                      <CTableDataCell>{delivery.deliveryPerson?.fullName}</CTableDataCell>
+                      <CTableDataCell>{delivery.fromPharmacy?.name}</CTableDataCell>
+                      <CTableDataCell>{delivery.requestedBy?.fullName}</CTableDataCell>
                       <CTableDataCell>{delivery.status}</CTableDataCell>
                       <CTableDataCell>Actions...</CTableDataCell>
                     </CTableRow>

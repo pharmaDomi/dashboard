@@ -17,85 +17,53 @@ import axios from 'axios'
 const WidgetsDropdown = () => {
   const [users, setUsers] = useState([])
   const [pharmacies, setPharmacies] = useState([])
+  //get user by month
+  const [userByMonth, setUsersByMonth] = useState([])
+
+  const fetchData = async () => {
+    await fetchUsers()
+    await fetchPharmacies()
+    await fetchUsersByMonth()
+  }
+
+  // Function to fetch users
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('http://localhost:3117/dashboard/users')
+      setUsers(response.data)
+    } catch (error) {
+      console.error('Error fetching users:', error)
+      // Handle error states if needed
+    }
+  }
+
+  //fetch pharmacies
+  const fetchPharmacies = async () => {
+    try {
+      const response = await axios.get('http://localhost:3117/pharmacies/')
+      setPharmacies(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error fetching Pharmacies:', error)
+      // Handle error states if needed
+    }
+  }
+
+  const fetchUsersByMonth = async () => {
+    try {
+      const response = await axios.get('http://localhost:3117/dashboard/users-by-month')
+      setUsersByMonth(response.data)
+    } catch (error) {
+      console.error('Error fetching users by month:', error)
+      // Handle error states if needed
+    }
+  }
 
   useEffect(() => {
-    // Function to fetch users
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get('http://localhost:3117/dashboard/users')
-        setUsers(response.data.users)
-      } catch (error) {
-        console.error('Error fetching users:', error)
-        // Handle error states if needed
-      }
-    }
+    fetchData()
+  }, [])
 
-    //fetch pharmacies
-    const fetchPharmacies = async () => {
-      try {
-        const response = await axios.get('http://localhost:3117/pharmacies/')
-        setPharmacies(response.data)
-        console.log(response.data)
-      } catch (error) {
-        console.error('Error fetching Pharmacies:', error)
-        // Handle error states if needed
-      }
-    }
-    // Call the function to fetch users
-    fetchUsers()
-    fetchPharmacies()
-    const usersByMonthList = countUsersByMonth(users)
-    console.log(usersByMonthList)
-  })
-
-  //retrive users by month
-  const countUsersByMonth = (users) => {
-    const currentDate = new Date()
-    const currentYear = currentDate.getFullYear()
-    const currentMonth = currentDate.getMonth()
-
-    const monthCounts = {
-      January: 0,
-      February: 0,
-      March: 0,
-      April: 0,
-      May: 0,
-      June: 0,
-      July: 0,
-      August: 0,
-      September: 0,
-      October: 0,
-      November: 0,
-      December: 0,
-    }
-
-    // Set initial state dynamically based on the current month
-    for (const month in monthCounts) {
-      const monthIndex = new Date(`${month} 1, ${currentYear}`).getMonth()
-      if (monthIndex > currentMonth) {
-        delete monthCounts[month]
-      }
-    }
-
-    users.forEach((user) => {
-      const joinedDate = new Date(user.joinedAT)
-      const joinedYear = joinedDate.getFullYear()
-      const joinedMonth = joinedDate.getMonth()
-
-      if (joinedYear === currentYear && joinedMonth <= currentMonth) {
-        const monthName = joinedDate.toLocaleString('default', { month: 'long' })
-        monthCounts[monthName]++
-      }
-    })
-
-    const usersByMonthArray = Object.entries(monthCounts).map(([month, count]) => ({
-      month,
-      count,
-    }))
-
-    console.log(usersByMonthArray)
-    return usersByMonthArray
-  }
+  console.log(users)
 
   return (
     <CRow>
@@ -150,7 +118,7 @@ const WidgetsDropdown = () => {
                     backgroundColor: 'transparent',
                     borderColor: 'rgba(255,255,255,.55)',
                     pointBackgroundColor: getStyle('--cui-primary'),
-                    data: countUsersByMonth(users).map(({ count }) => count),
+                    data: userByMonth.map(({ count }) => count),
                   },
                 ],
               }}

@@ -16,27 +16,24 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 const UsersList = () => {
-  const [pharmacies, setPharmacies] = useState([])
   const [filteredPharmacies, setFilteredPharmacies] = useState([])
   const [filters, setFilters] = useState({
     name: '',
     owner: '',
     phone: '',
   })
-  useEffect(() => {
-    // Function to fetch users
-    const fetchPharmacies = async () => {
-      try {
-        const response = await axios.get('http://localhost:3117/pharmacies')
-        setPharmacies(response.data)
-        setFilteredPharmacies(response.data)
-        console.log(response.data)
-      } catch (error) {
-        console.error('Error fetching users:', error)
-        // Handle error states if needed
-      }
+  // Function to fetch users
+  const fetchPharmacies = async () => {
+    try {
+      const response = await axios.get('http://localhost:3117/pharmacies')
+      setFilteredPharmacies(response.data)
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error fetching users:', error)
+      // Handle error states if needed
     }
-
+  }
+  useEffect(() => {
     // Call the function to fetch users
     fetchPharmacies()
   }, []) // Run this effect only once (on component mount)
@@ -51,24 +48,6 @@ const UsersList = () => {
   }
   const handlePhoneChange = (e) => {
     setFilters({ ...filters, phone: e.target.value })
-  }
-
-  useEffect(() => {
-    filterAndSearch()
-  })
-
-  const filterAndSearch = () => {
-    let filteredData = [...pharmacies]
-
-    // Apply filters for name, owner, and phone number
-    filteredData = filteredData.filter(
-      (pharmacy) =>
-        pharmacy.name.toLowerCase().includes(filters.name.toLowerCase()) &&
-        pharmacy.owner.toLowerCase().includes(filters.owner.toLowerCase()) &&
-        pharmacy.phone?.includes(filters.phone),
-    )
-
-    setFilteredPharmacies(filteredData)
   }
   return (
     <CRow>
@@ -134,8 +113,7 @@ const UsersList = () => {
                     <CTableRow key={index}>
                       <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                       <CTableDataCell>{pharmacy.name}</CTableDataCell>
-                      <CTableDataCell>{pharmacy.owner}</CTableDataCell>
-
+                      <CTableDataCell>{pharmacy.owner.fullName}</CTableDataCell>
                       <CTableDataCell>{pharmacy.phone}</CTableDataCell>
                       <CTableDataCell>
                         {pharmacy.latitude}, {pharmacy.longitude}

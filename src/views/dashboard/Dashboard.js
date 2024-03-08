@@ -57,20 +57,20 @@ import axios from 'axios'
 const Dashboard = () => {
   //
   const [deliveries, setDeliveries] = useState([])
-
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:3117/deliveries') // Adjust the endpoint accordingly
+      setDeliveries(response.data)
+    } catch (error) {
+      console.error('Error fetching deliveries:', error)
+    }
+  }
   useEffect(() => {
     // Fetch deliveries data from the server
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:3117/deliveries') // Adjust the endpoint accordingly
-        setDeliveries(response.data.deliveries)
-      } catch (error) {
-        console.error('Error fetching deliveries:', error)
-      }
-    }
 
     fetchData()
   }, [])
+  console.log(deliveries)
   const monthNames = [
     'January',
     'February',
@@ -89,7 +89,7 @@ const Dashboard = () => {
     // Assuming 'date' property exists in the 'delivery' object
     const deliveryDate = new Date(delivery.date)
     const month = deliveryDate.getMonth()
-    const deliveryPersonId = delivery.deliveryPerson.toString()
+    const deliveryPersonId = delivery.deliveryPerson?.toString()
 
     if (!result[deliveryPersonId]) {
       result[deliveryPersonId] = {}

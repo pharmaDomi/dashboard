@@ -17,27 +17,23 @@ import {
 import axios from 'axios'
 
 const DeliveryPeopleList = () => {
-  const [deliveryPeople, setDeliveryPeople] = useState([])
   const [filteredDeliveryPeople, setFilteredDeliveryPeople] = useState([])
   const [filters, setFilters] = useState({
     name: '',
     email: '',
     phone: '',
   })
-
-  useEffect(() => {
-    const fetchDeliveryPeople = async () => {
-      try {
-        const response = await axios.get('http://localhost:3117/deliveries/deliveryPeople')
-        setDeliveryPeople(response.data.deliveryPeople)
-        setFilteredDeliveryPeople(response.data.deliveryPeople)
-      } catch (error) {
-        console.error('Error fetching delivery people:', error)
-      }
+  const fetchDeliveryPeople = async () => {
+    try {
+      const response = await axios.get('http://localhost:3117/deliveries/deliveryPeople')
+      setFilteredDeliveryPeople(response.data)
+    } catch (error) {
+      console.error('Error fetching delivery people:', error)
     }
-
+  }
+  useEffect(() => {
     fetchDeliveryPeople()
-  }, [])
+  }, [filteredDeliveryPeople])
 
   const handleNameChange = (e) => {
     setFilters({ ...filters, name: e.target.value })
@@ -49,23 +45,6 @@ const DeliveryPeopleList = () => {
 
   const handlePhoneChange = (e) => {
     setFilters({ ...filters, phone: e.target.value })
-  }
-
-  useEffect(() => {
-    filterAndSearch()
-  })
-
-  const filterAndSearch = () => {
-    let filteredData = [...deliveryPeople]
-
-    filteredData = filteredData.filter(
-      (deliveryPerson) =>
-        deliveryPerson.fullName.toLowerCase().includes(filters.name.toLowerCase()) &&
-        deliveryPerson.email.toLowerCase().includes(filters.email.toLowerCase()) &&
-        deliveryPerson.phoneNumber?.includes(filters.phone),
-    )
-
-    setFilteredDeliveryPeople(filteredData)
   }
 
   return (
