@@ -12,6 +12,7 @@ import {
   CButton,
 } from '@coreui/react'
 import axios from 'axios'
+import { CloudinaryContext, Image } from 'cloudinary-react'
 const AddPharmacy = () => {
   const [pharmacyData, setPharmacyData] = useState({
     pharmacyName: '',
@@ -19,25 +20,47 @@ const AddPharmacy = () => {
     phoneNumber: '',
     longitude: '',
     latitude: '',
+    image: null,
   })
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
     setPharmacyData({ ...pharmacyData, [name]: value })
   }
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
+  }
+
+  const [file, setFile] = useState()
+  const handleImageChange = (event) => {
+    const imageFile = event.target.files[0]
+    setFile(imageFile)
+    previewFiles(imageFile)
+  }
+  const [tempsrc, setTempsrc] = useState('')
+  function previewFiles(file) {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      setTempsrc(reader.result)
+      console.log(tempsrc)
+    }
+  }
 
   const handleSubmit = async () => {
     try {
-      const isAnyFieldEmpty = Object.values(pharmacyData).some((value) => value === '')
-      if (isAnyFieldEmpty) {
-        alert('Please fill in all fields')
-        return
-      }
-      const response = await axios.post('http://localhost:3117/pharmacies', pharmacyData)
+      const response = await axios.post('http://localhost:3117/pharmacies', {
+        image: tempsrc,
+        pharmacyData: pharmacyData,
+      })
+
       console.log('Response:', response.data)
-      // Show success message
       alert('Pharmacy added successfully!')
-      // Reset form fields after successful submission
       setPharmacyData({
         pharmacyName: '',
         ownerName: '',
@@ -46,17 +69,30 @@ const AddPharmacy = () => {
         latitude: '',
       })
     } catch (error) {
-      console.error('Error adding pharmacy:', error.response.data.error)
-      // Show specific error message based on the error status
-      if (error.response.status === 400) {
-        alert('Phone number should be 8 digits.')
-      } else if (error.response.status === 409) {
-        alert('Pharmacy with the same name already exists.')
+      console.error('Error adding pharmacy:', error)
+
+      // Display appropriate error messages based on error response
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        if (error.response.status === 400) {
+          alert('Error: Phone number should be 8 digits')
+        } else if (error.response.status === 409) {
+          alert('Error: Pharmacy name or phone number already exists')
+        } else if (error.response.status === 500) {
+          alert('Error: Could not upload image to server')
+        } else {
+          alert('Error: An unexpected error occurred. Please try again later.')
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        alert('Network error: Please check your internet connection and try again.')
       } else {
-        alert('Error adding pharmacy. Please try again.')
+        // Something else happened while setting up the request
+        alert('Error: An unexpected error occurred. Please try again later.')
       }
     }
   }
+
   return (
     <CRow>
       <CCol xs={12}>
@@ -120,8 +156,13 @@ const AddPharmacy = () => {
             </CInputGroup>
             <CFormLabel htmlFor="basic-url">Add An image</CFormLabel>
             <CInputGroup className="mb-3">
-              <CFormInput type="file" id="inputGroupFile01" />
+              <CFormInput type="file" id="inputGroupFile01" onChange={handleImageChange} />
             </CInputGroup>
+            <img
+              style={{ width: '30%', height: '30%' }}
+              src={tempsrc}
+              alt="no image is selected"
+            ></img>
           </CCardBody>
         </CCard>
         <CButton className="m-3" color="primary" onClick={handleSubmit}>
@@ -137,6 +178,7 @@ const AddPharmacy = () => {
               phoneNumber: '',
               longitude: '',
               latitude: '',
+              image: null,
             })
           }
         >

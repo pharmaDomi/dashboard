@@ -22,6 +22,8 @@
     "test:debug": "react-scripts --inspect-brk test --runInBand"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.0",
+    "@cloudinary/url-gen": "^1.19.0",
     "@coreui/chartjs": "^3.1.2",
     "@coreui/coreui": "^4.2.6",
     "@coreui/icons": "^3.0.1",
@@ -32,9 +34,11 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.1",
-    "axios": "^1.6.2",
+    "axios": "^1.6.8",
     "chart.js": "^3.9.1",
     "classnames": "^2.3.2",
+    "cloudinary": "^2.0.3",
+    "cloudinary-react": "^1.8.1",
     "core-js": "^3.31.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

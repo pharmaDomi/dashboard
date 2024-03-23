@@ -15,7 +15,15 @@ import {
   CFormInput,
 } from '@coreui/react'
 import axios from 'axios'
+import { AdvancedImage } from '@cloudinary/react'
+import { Cloudinary } from '@cloudinary/url-gen'
 const UsersList = () => {
+  const cloudinary = new Cloudinary({
+    cloud: {
+      cloudName: 'dq4bfwxbx',
+    },
+  })
+
   const [filteredPharmacies, setFilteredPharmacies] = useState([])
   const [filters, setFilters] = useState({
     name: '',
@@ -113,12 +121,17 @@ const UsersList = () => {
                     <CTableRow key={index}>
                       <CTableHeaderCell scope="row">{index + 1}</CTableHeaderCell>
                       <CTableDataCell>{pharmacy.name}</CTableDataCell>
-                      <CTableDataCell>{pharmacy.owner.fullName}</CTableDataCell>
+                      <CTableDataCell>{pharmacy.owner}</CTableDataCell>
                       <CTableDataCell>{pharmacy.phone}</CTableDataCell>
                       <CTableDataCell>
                         {pharmacy.latitude}, {pharmacy.longitude}
                       </CTableDataCell>
-                      <CTableDataCell>Actions...</CTableDataCell>
+                      <CTableDataCell>
+                        <AdvancedImage
+                          style={{ width: '10%', height: '10%' }}
+                          cldImg={cloudinary.image(pharmacy.image)}
+                        />
+                      </CTableDataCell>
                     </CTableRow>
                   ))}
                 </CTableBody>

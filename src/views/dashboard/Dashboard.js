@@ -85,7 +85,7 @@ const Dashboard = () => {
     'November',
     'December',
   ]
-  const aggregatedData = deliveries.reduce((result, delivery) => {
+  const aggregatedData = deliveries?.reduce((result, delivery) => {
     // Assuming 'date' property exists in the 'delivery' object
     const deliveryDate = new Date(delivery.date)
     const month = deliveryDate.getMonth()
