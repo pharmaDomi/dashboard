@@ -12,8 +12,9 @@ import {
   CButton,
 } from '@coreui/react'
 import axios from 'axios'
-import { CloudinaryContext, Image } from 'cloudinary-react'
+import { Loading } from 'src/loading/loading'
 const AddPharmacy = () => {
+  const [loading, setLoading] = useState(false)
   const [pharmacyData, setPharmacyData] = useState({
     pharmacyName: '',
     ownerName: '',
@@ -27,19 +28,9 @@ const AddPharmacy = () => {
     const { name, value } = event.target
     setPharmacyData({ ...pharmacyData, [name]: value })
   }
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result)
-      reader.onerror = (error) => reject(error)
-    })
-  }
 
-  const [file, setFile] = useState()
   const handleImageChange = (event) => {
     const imageFile = event.target.files[0]
-    setFile(imageFile)
     previewFiles(imageFile)
   }
   const [tempsrc, setTempsrc] = useState('')
@@ -53,6 +44,7 @@ const AddPharmacy = () => {
   }
 
   const handleSubmit = async () => {
+    setLoading(true)
     try {
       const response = await axios.post('http://localhost:3117/pharmacies', {
         image: tempsrc,
@@ -60,6 +52,7 @@ const AddPharmacy = () => {
       })
 
       console.log('Response:', response.data)
+      setLoading(false)
       alert('Pharmacy added successfully!')
       setPharmacyData({
         pharmacyName: '',
@@ -68,11 +61,13 @@ const AddPharmacy = () => {
         longitude: '',
         latitude: '',
       })
+      setTempsrc('')
     } catch (error) {
       console.error('Error adding pharmacy:', error)
 
       // Display appropriate error messages based on error response
       if (error.response) {
+        setLoading(false)
         // The request was made and the server responded with a status code
         if (error.response.status === 400) {
           alert('Error: Phone number should be 8 digits')
@@ -84,9 +79,12 @@ const AddPharmacy = () => {
           alert('Error: An unexpected error occurred. Please try again later.')
         }
       } else if (error.request) {
+        setLoading(false)
+
         // The request was made but no response was received
         alert('Network error: Please check your internet connection and try again.')
       } else {
+        setLoading(false)
         // Something else happened while setting up the request
         alert('Error: An unexpected error occurred. Please try again later.')
       }
@@ -94,98 +92,104 @@ const AddPharmacy = () => {
   }
 
   return (
-    <CRow>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Add a new pharmacy</strong>
-          </CCardHeader>
-          <CCardBody>
-            <CFormLabel htmlFor="pharmacyName">Pharmacy name</CFormLabel>
+    <div>
+      {loading ? (
+        <Loading loading={loading} />
+      ) : (
+        <CRow>
+          <CCol xs={12}>
+            <CCard className="mb-4">
+              <CCardHeader>
+                <strong>Add a new pharmacy</strong>
+              </CCardHeader>
+              <CCardBody>
+                <CFormLabel htmlFor="pharmacyName">Pharmacy name</CFormLabel>
 
-            <CInputGroup className="mb-3">
-              <CFormInput
-                name="pharmacyName"
-                value={pharmacyData.pharmacyName}
-                onChange={handleInputChange}
-                placeholder="Pharmacy name"
-                aria-label="Pharmacy name"
-              />
-            </CInputGroup>
-            <CFormLabel htmlFor="ownerName">Owner name</CFormLabel>
+                <CInputGroup className="mb-3">
+                  <CFormInput
+                    name="pharmacyName"
+                    value={pharmacyData.pharmacyName}
+                    onChange={handleInputChange}
+                    placeholder="Pharmacy name"
+                    aria-label="Pharmacy name"
+                  />
+                </CInputGroup>
+                <CFormLabel htmlFor="ownerName">Owner name</CFormLabel>
 
-            <CInputGroup className="mb-3">
-              <CFormInput
-                name="ownerName"
-                value={pharmacyData.ownerName}
-                onChange={handleInputChange}
-                placeholder="Pharmacy owner name"
-                aria-label="Recipient&#39;s username"
-                aria-describedby="basic-addon2"
-              />
-            </CInputGroup>
-            <CFormLabel htmlFor="PhoneNumber">Phone Number</CFormLabel>
-            <CInputGroup className="mb-3">
-              <CInputGroupText id="basic-addon3">+216</CInputGroupText>
-              <CFormInput
-                id="PhoneNumber"
-                name="phoneNumber"
-                value={pharmacyData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Phone Number"
-                aria-describedby="basic-addon3"
-              />
-            </CInputGroup>
-            <CFormLabel htmlFor="Longitude">Location</CFormLabel>
-            <CInputGroup className="mb-3">
-              <CFormInput
-                placeholder="Longitude"
-                name="longitude"
-                value={pharmacyData.longitude}
-                onChange={handleInputChange}
-                aria-label="longitude"
-              />
-              <CInputGroupText>/</CInputGroupText>
-              <CFormInput
-                placeholder="Latitude"
-                name="latitude"
-                value={pharmacyData.latitude}
-                onChange={handleInputChange}
-                aria-label="Latitude"
-              />
-            </CInputGroup>
-            <CFormLabel htmlFor="basic-url">Add An image</CFormLabel>
-            <CInputGroup className="mb-3">
-              <CFormInput type="file" id="inputGroupFile01" onChange={handleImageChange} />
-            </CInputGroup>
-            <img
-              style={{ width: '30%', height: '30%' }}
-              src={tempsrc}
-              alt="no image is selected"
-            ></img>
-          </CCardBody>
-        </CCard>
-        <CButton className="m-3" color="primary" onClick={handleSubmit}>
-          Add
-        </CButton>
-        <CButton
-          className="m-3"
-          color="danger"
-          onClick={() =>
-            setPharmacyData({
-              pharmacyName: '',
-              ownerName: '',
-              phoneNumber: '',
-              longitude: '',
-              latitude: '',
-              image: null,
-            })
-          }
-        >
-          Clear All
-        </CButton>
-      </CCol>
-    </CRow>
+                <CInputGroup className="mb-3">
+                  <CFormInput
+                    name="ownerName"
+                    value={pharmacyData.ownerName}
+                    onChange={handleInputChange}
+                    placeholder="Pharmacy owner name"
+                    aria-label="Recipient&#39;s username"
+                    aria-describedby="basic-addon2"
+                  />
+                </CInputGroup>
+                <CFormLabel htmlFor="PhoneNumber">Phone Number</CFormLabel>
+                <CInputGroup className="mb-3">
+                  <CInputGroupText id="basic-addon3">+216</CInputGroupText>
+                  <CFormInput
+                    id="PhoneNumber"
+                    name="phoneNumber"
+                    value={pharmacyData.phoneNumber}
+                    onChange={handleInputChange}
+                    placeholder="Phone Number"
+                    aria-describedby="basic-addon3"
+                  />
+                </CInputGroup>
+                <CFormLabel htmlFor="Longitude">Location</CFormLabel>
+                <CInputGroup className="mb-3">
+                  <CFormInput
+                    placeholder="Longitude"
+                    name="longitude"
+                    value={pharmacyData.longitude}
+                    onChange={handleInputChange}
+                    aria-label="longitude"
+                  />
+                  <CInputGroupText>/</CInputGroupText>
+                  <CFormInput
+                    placeholder="Latitude"
+                    name="latitude"
+                    value={pharmacyData.latitude}
+                    onChange={handleInputChange}
+                    aria-label="Latitude"
+                  />
+                </CInputGroup>
+                <CFormLabel htmlFor="basic-url">Add An image</CFormLabel>
+                <CInputGroup className="mb-3">
+                  <CFormInput type="file" id="inputGroupFile01" onChange={handleImageChange} />
+                </CInputGroup>
+                <img
+                  style={{ width: '30%', height: '30%' }}
+                  src={tempsrc}
+                  alt="no file is selected"
+                ></img>
+              </CCardBody>
+            </CCard>
+            <CButton className="m-3" color="primary" onClick={handleSubmit}>
+              Add
+            </CButton>
+            <CButton
+              className="m-3"
+              color="danger"
+              onClick={() =>
+                setPharmacyData({
+                  pharmacyName: '',
+                  ownerName: '',
+                  phoneNumber: '',
+                  longitude: '',
+                  latitude: '',
+                  image: null,
+                })
+              }
+            >
+              Clear All
+            </CButton>
+          </CCol>
+        </CRow>
+      )}
+    </div>
   )
 }
 
