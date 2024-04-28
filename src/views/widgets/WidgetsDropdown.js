@@ -13,6 +13,7 @@ import { CChartBar, CChartLine } from '@coreui/react-chartjs'
 import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import axios from 'axios'
+import { baseUrl } from 'src/helpers/BaseUrl'
 
 const WidgetsDropdown = () => {
   const [users, setUsers] = useState([])
@@ -29,7 +30,7 @@ const WidgetsDropdown = () => {
   // Function to fetch users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/dashboard/users')
+      const response = await axios.get(`${baseUrl}/dashboard/users`)
       setUsers(response.data)
     } catch (error) {
       console.error('Error fetching users:', error)
@@ -40,7 +41,7 @@ const WidgetsDropdown = () => {
   //fetch pharmacies
   const fetchPharmacies = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/pharmacies/')
+      const response = await axios.get(`${baseUrl}/pharmacies`)
       setPharmacies(response.data)
       console.log(response.data)
     } catch (error) {
@@ -51,8 +52,9 @@ const WidgetsDropdown = () => {
 
   const fetchUsersByMonth = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/dashboard/users-by-month')
+      const response = await axios.get(`${baseUrl}/dashboard/users-by-month`)
       setUsersByMonth(response.data)
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching users by month:', error)
       // Handle error states if needed
@@ -118,7 +120,7 @@ const WidgetsDropdown = () => {
                     backgroundColor: 'transparent',
                     borderColor: 'rgba(255,255,255,.55)',
                     pointBackgroundColor: getStyle('--cui-primary'),
-                    data: userByMonth.map(({ count }) => count),
+                    data: userByMonth,
                   },
                 ],
               }}

@@ -17,6 +17,7 @@ import {
 import axios from 'axios'
 import { AdvancedImage } from '@cloudinary/react'
 import { Cloudinary } from '@cloudinary/url-gen'
+import { baseUrl } from 'src/helpers/BaseUrl'
 const UsersList = () => {
   const cloudinary = new Cloudinary({
     cloud: {
@@ -33,7 +34,7 @@ const UsersList = () => {
   // Function to fetch users
   const fetchPharmacies = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/pharmacies')
+      const response = await axios.get(`${baseUrl}/pharmacies`)
       setFilteredPharmacies(response.data)
       console.log(response.data)
     } catch (error) {

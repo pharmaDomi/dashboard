@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import { Loading } from 'src/loading/loading'
+import { baseUrl } from 'src/helpers/BaseUrl'
 const AddPharmacy = () => {
   const [loading, setLoading] = useState(false)
   const [pharmacyData, setPharmacyData] = useState({
@@ -46,7 +47,7 @@ const AddPharmacy = () => {
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      const response = await axios.post('http://localhost:3117/pharmacies', {
+      const response = await axios.post(`${baseUrl}/pharmacies`, {
         image: tempsrc,
         pharmacyData: pharmacyData,
       })

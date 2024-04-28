@@ -16,6 +16,7 @@ import {
   CFormInput,
 } from '@coreui/react'
 import axios from 'axios'
+import { baseUrl } from 'src/helpers/BaseUrl'
 const UsersList = () => {
   const [filteredUsers, setFilteredUsers] = useState([])
   const [filters, setFilters] = useState({
@@ -30,7 +31,7 @@ const UsersList = () => {
   //fetch users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/dashboard/users')
+      const response = await axios.get(`${baseUrl}/dashboard/users`)
       setFilteredUsers(response.data)
     } catch (error) {
       console.error('Error fetching users:', error)

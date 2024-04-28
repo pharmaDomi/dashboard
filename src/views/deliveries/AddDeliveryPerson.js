@@ -12,6 +12,7 @@ import {
   CButton,
 } from '@coreui/react'
 import axios from 'axios'
+import { baseUrl } from 'src/helpers/BaseUrl'
 
 const AddDeliveryPerson = () => {
   const [deliveryPersonData, setDeliveryPersonData] = useState({
@@ -49,7 +50,7 @@ const AddDeliveryPerson = () => {
       }
 
       const response = await axios.post(
-        'http://localhost:3117/deliveries/createDeliveryPerson',
+        `${baseUrl}/deliveries/createDeliveryPerson`,
         deliveryPersonData,
       )
       console.log('Response:', response.data)

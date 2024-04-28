@@ -15,6 +15,7 @@ import {
   CFormInput,
 } from '@coreui/react'
 import axios from 'axios'
+import { baseUrl } from 'src/helpers/BaseUrl'
 
 const DeliveriesList = () => {
   const [filteredDeliveries, setFilteredDeliveries] = useState([])
@@ -29,7 +30,7 @@ const DeliveriesList = () => {
     // Function to fetch deliveries
     const fetchDeliveries = async () => {
       try {
-        const response = await axios.get('http://localhost:3117/deliveries')
+        const response = await axios.get(`${baseUrl}/deliveries`)
         setFilteredDeliveries(response.data)
         console.log(response.data)
       } catch (error) {

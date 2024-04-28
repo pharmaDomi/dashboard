@@ -15,6 +15,7 @@ import {
   CFormInput,
 } from '@coreui/react'
 import axios from 'axios'
+import { baseUrl } from 'src/helpers/BaseUrl'
 
 const DeliveryPeopleList = () => {
   const [filteredDeliveryPeople, setFilteredDeliveryPeople] = useState([])
@@ -25,15 +26,16 @@ const DeliveryPeopleList = () => {
   })
   const fetchDeliveryPeople = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/deliveries/deliveryPeople')
+      const response = await axios.get(`${baseUrl}/deliveries/deliveryPeople`)
       setFilteredDeliveryPeople(response.data)
+      console.log(response.data)
     } catch (error) {
       console.error('Error fetching delivery people:', error)
     }
   }
   useEffect(() => {
     fetchDeliveryPeople()
-  }, [filteredDeliveryPeople])
+  }, [])
 
   const handleNameChange = (e) => {
     setFilters({ ...filters, name: e.target.value })

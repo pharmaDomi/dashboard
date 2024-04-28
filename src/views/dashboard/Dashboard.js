@@ -19,7 +19,6 @@ import {
   CTableRow,
 } from '@coreui/react'
 import { CChartLine } from '@coreui/react-chartjs'
-import { getStyle, hexToRgba } from '@coreui/utils'
 import CIcon from '@coreui/icons-react'
 import {
   cibCcAmex,
@@ -53,14 +52,24 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import axios from 'axios'
+import { baseUrl } from 'src/helpers/BaseUrl'
 
 const Dashboard = () => {
   //
   const [deliveries, setDeliveries] = useState([])
+  const [monthlyDeliveryPerP, setMonthlyDeliveryPerP] = useState({})
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3117/deliveries') // Adjust the endpoint accordingly
+      const response = await axios.get(`${baseUrl}/deliveries`) // Adjust the endpoint accordingly
       setDeliveries(response.data)
+    } catch (error) {
+      console.error('Error fetching deliveries:', error)
+    }
+  }
+  const monthlyDeliveryPerPerson = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/deliveries/monthly-deliver-per-person`) // Adjust the endpoint accordingly
+      setMonthlyDeliveryPerP(response.data)
     } catch (error) {
       console.error('Error fetching deliveries:', error)
     }
@@ -69,94 +78,32 @@ const Dashboard = () => {
     // Fetch deliveries data from the server
 
     fetchData()
+    monthlyDeliveryPerPerson()
   }, [])
+  const getRandomColor = () => {
+    // Array of predefined colors
+    const colors = [
+      '#6A0DAD', // Purple
+      '#AB47BC', // Light Purple
+      '#4CAF50', // Green
+      '#8BC34A', // Light Green
+      '#2196F3', // Blue
+      '#03A9F4', // Light Blue
+      '#FFC107', // Yellow
+      '#FF9800', // Orange
+      '#FF5722', // Dark Orange
+      '#9C27B0', // Dark Purple
+      '#3F51B5', // Dark Blue
+    ]
+    // Generate random index to select a color from the array
+    const randomIndex = Math.floor(Math.random() * colors.length)
+    return colors[randomIndex]
+  }
+
   console.log(deliveries)
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ]
-  const aggregatedData = deliveries?.reduce((result, delivery) => {
-    // Assuming 'date' property exists in the 'delivery' object
-    const deliveryDate = new Date(delivery.date)
-    const month = deliveryDate.getMonth()
-    const deliveryPersonId = delivery.deliveryPerson?.toString()
-
-    if (!result[deliveryPersonId]) {
-      result[deliveryPersonId] = {}
-    }
-
-    if (!result[deliveryPersonId][month]) {
-      result[deliveryPersonId][month] = 0
-    }
-
-    result[deliveryPersonId][month]++
-
-    return result
-  }, {})
-
-  // Convert aggregated data to chart format
-  const chartData = {
-    labels: Object.keys(
-      (aggregatedData && aggregatedData[Object.keys(aggregatedData)[0]]) || {},
-    ).map((month) => monthNames[parseInt(month)]),
-    datasets: Object.keys(aggregatedData).map((personId) => ({
-      label: `Delivery Person ${personId}`,
-      backgroundColor: 'rgba(0,123,255,0.1)',
-      borderColor: 'rgba(0,123,255,1)',
-      pointHoverBackgroundColor: 'rgba(0,123,255,1)',
-      borderWidth: 1,
-      data: Object.values(aggregatedData[personId]),
-      fill: true,
-    })),
-  }
-
-  const chartOptions = {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-      y: {
-        ticks: {
-          beginAtZero: true,
-          maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5), // Adjust as needed
-          max: 250, // Adjust as needed
-        },
-      },
-    },
-    elements: {
-      line: {
-        tension: 0.4,
-      },
-      point: {
-        radius: 0,
-        hitRadius: 10,
-        hoverRadius: 4,
-        hoverBorderWidth: 3,
-      },
-    },
-  }
+  console.log(monthlyDeliveryPerP)
 
   //
-  const random = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
 
   const progressExample = [
     { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
@@ -311,56 +258,21 @@ const Dashboard = () => {
             style={{ height: '300px', marginTop: '40px' }}
             data={{
               labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [
-                {
-                  label: 'My First dataset',
-                  backgroundColor: hexToRgba(getStyle('--cui-info'), 10),
-                  borderColor: getStyle('--cui-info'),
-                  pointHoverBackgroundColor: getStyle('--cui-info'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                  fill: true,
-                },
-                {
-                  label: 'My Second dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-success'),
-                  pointHoverBackgroundColor: getStyle('--cui-success'),
-                  borderWidth: 2,
-                  data: [
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                    random(50, 200),
-                  ],
-                },
-                {
-                  label: 'My Third dataset',
-                  backgroundColor: 'transparent',
-                  borderColor: getStyle('--cui-danger'),
-                  pointHoverBackgroundColor: getStyle('--cui-danger'),
-                  borderWidth: 1,
-                  borderDash: [8, 5],
-                  data: [65, 65, 65, 65, 65, 65, 65],
-                },
-              ],
+              datasets: Object.keys(monthlyDeliveryPerP?.deliveryPeople ?? {}).map((person) => ({
+                label: person,
+                backgroundColor: 'transparent',
+                borderColor: getRandomColor(),
+                pointHoverBackgroundColor: getRandomColor(),
+                borderWidth: 2,
+                data: Object.values(monthlyDeliveryPerP.deliveryPeople[person] ?? {}),
+                fill: false,
+              })),
             }}
             options={{
               maintainAspectRatio: false,
               plugins: {
                 legend: {
-                  display: false,
+                  display: true,
                 },
               },
               scales: {
@@ -390,11 +302,6 @@ const Dashboard = () => {
                 },
               },
             }}
-          />
-          <CChartLine
-            style={{ height: '300px', marginTop: '40px' }}
-            data={chartData}
-            options={chartOptions}
           />
         </CCardBody>
         <CCardFooter>
