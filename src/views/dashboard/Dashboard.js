@@ -53,22 +53,52 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import axios from 'axios'
 import { baseUrl } from 'src/helpers/BaseUrl'
+import { getToken } from 'src/helpers/RetriveToken'
 
 const Dashboard = () => {
   //
   const [deliveries, setDeliveries] = useState([])
   const [monthlyDeliveryPerP, setMonthlyDeliveryPerP] = useState({})
-  const fetchData = async () => {
+  const token = getToken()
+
+  const fetchData = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/deliveries`) // Adjust the endpoint accordingly
+      const response = await axios.get(`${baseUrl}/deliveries`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          Accept: 'application/json', // Specify the accepted response type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setDeliveries(response.data)
     } catch (error) {
       console.error('Error fetching deliveries:', error)
     }
   }
   const monthlyDeliveryPerPerson = async () => {
+    const token = getToken()
     try {
-      const response = await axios.get(`${baseUrl}/deliveries/monthly-deliver-per-person`) // Adjust the endpoint accordingly
+      const response = await axios.get(`${baseUrl}/deliveries/monthly-deliver-per-person`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          Accept: 'application/json', // Specify the accepted response type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setMonthlyDeliveryPerP(response.data)
     } catch (error) {
       console.error('Error fetching deliveries:', error)
@@ -77,9 +107,9 @@ const Dashboard = () => {
   useEffect(() => {
     // Fetch deliveries data from the server
 
-    fetchData()
+    fetchData(token)
     monthlyDeliveryPerPerson()
-  }, [])
+  }, [token])
   const getRandomColor = () => {
     // Array of predefined colors
     const colors = [

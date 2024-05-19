@@ -14,23 +14,33 @@ import CIcon from '@coreui/icons-react'
 import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
 import axios from 'axios'
 import { baseUrl } from 'src/helpers/BaseUrl'
+import { getToken } from 'src/helpers/RetriveToken'
 
 const WidgetsDropdown = () => {
+  const token = getToken()
+
   const [users, setUsers] = useState([])
   const [pharmacies, setPharmacies] = useState([])
   //get user by month
   const [userByMonth, setUsersByMonth] = useState([])
 
-  const fetchData = async () => {
-    await fetchUsers()
-    await fetchPharmacies()
-    await fetchUsersByMonth()
-  }
-
   // Function to fetch users
-  const fetchUsers = async () => {
+  const fetchUsers = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/dashboard/users`)
+      const response = await axios.get(`${baseUrl}/dashboard/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          Accept: 'application/json', // Specify the accepted response type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setUsers(response.data)
     } catch (error) {
       console.error('Error fetching users:', error)
@@ -39,9 +49,21 @@ const WidgetsDropdown = () => {
   }
 
   //fetch pharmacies
-  const fetchPharmacies = async () => {
+  const fetchPharmacies = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/pharmacies`)
+      const response = await axios.get(`${baseUrl}/pharmacies`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add the token to the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setPharmacies(response.data)
       console.log(response.data)
     } catch (error) {
@@ -49,10 +71,22 @@ const WidgetsDropdown = () => {
       // Handle error states if needed
     }
   }
-
-  const fetchUsersByMonth = async () => {
+  const fetchUsersByMonth = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/dashboard/users-by-month`)
+      const response = await axios.get(`${baseUrl}/dashboard/users-by-month`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          Accept: 'application/json', // Specify the accepted response type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setUsersByMonth(response.data)
       console.log(response.data)
     } catch (error) {
@@ -62,8 +96,10 @@ const WidgetsDropdown = () => {
   }
 
   useEffect(() => {
-    fetchData()
-  }, [])
+    fetchUsers(token)
+    fetchPharmacies(token)
+    fetchUsersByMonth(token)
+  }, [token])
 
   console.log(users)
 

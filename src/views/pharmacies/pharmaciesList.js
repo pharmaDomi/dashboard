@@ -18,6 +18,7 @@ import axios from 'axios'
 import { AdvancedImage } from '@cloudinary/react'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { baseUrl } from 'src/helpers/BaseUrl'
+import { getToken } from 'src/helpers/RetriveToken'
 const UsersList = () => {
   const cloudinary = new Cloudinary({
     cloud: {
@@ -32,9 +33,22 @@ const UsersList = () => {
     phone: '',
   })
   // Function to fetch users
-  const fetchPharmacies = async () => {
+  const fetchPharmacies = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/pharmacies`)
+      const response = await axios.get(`${baseUrl}/pharmacies`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'X-Content-Type-Options': 'nosniff',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+          'X-Frame-Options': 'DENY',
+          'X-XSS-Protection': '1; mode=block',
+          'Referrer-Policy': 'no-referrer',
+          'Cache-Control': 'no-store',
+        },
+      })
+
       setFilteredPharmacies(response.data)
       console.log(response.data)
     } catch (error) {
@@ -42,10 +56,11 @@ const UsersList = () => {
       // Handle error states if needed
     }
   }
+  const token = getToken()
   useEffect(() => {
     // Call the function to fetch users
-    fetchPharmacies()
-  }, []) // Run this effect only once (on component mount)
+    fetchPharmacies(token)
+  }, [token]) // Run this effect only once (on component mount)
   // Update filters for Full Name input change
   const handleNameChange = (e) => {
     setFilters({ ...filters, name: e.target.value })

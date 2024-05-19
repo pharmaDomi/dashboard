@@ -14,6 +14,7 @@ import {
 import axios from 'axios'
 import { Loading } from 'src/loading/loading'
 import { baseUrl } from 'src/helpers/BaseUrl'
+import { getToken } from 'src/helpers/RetriveToken'
 const AddPharmacy = () => {
   const [loading, setLoading] = useState(false)
   const [pharmacyData, setPharmacyData] = useState({
@@ -43,14 +44,30 @@ const AddPharmacy = () => {
       console.log(tempsrc)
     }
   }
-
-  const handleSubmit = async () => {
+  const token = getToken()
+  const handleSubmit = async (token) => {
     setLoading(true)
     try {
-      const response = await axios.post(`${baseUrl}/pharmacies`, {
-        image: tempsrc,
-        pharmacyData: pharmacyData,
-      })
+      const response = await axios.post(
+        `${baseUrl}/pharmacies`,
+        {
+          image: tempsrc,
+          pharmacyData: pharmacyData,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-Content-Type-Options': 'nosniff',
+            'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+            'X-Frame-Options': 'DENY',
+            'X-XSS-Protection': '1; mode=block',
+            'Referrer-Policy': 'no-referrer',
+            'Cache-Control': 'no-store',
+          },
+        },
+      )
 
       console.log('Response:', response.data)
       setLoading(false)
@@ -168,7 +185,7 @@ const AddPharmacy = () => {
                 ></img>
               </CCardBody>
             </CCard>
-            <CButton className="m-3" color="primary" onClick={handleSubmit}>
+            <CButton className="m-3" color="primary" onClick={() => handleSubmit(token)}>
               Add
             </CButton>
             <CButton

@@ -17,6 +17,7 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import { baseUrl } from 'src/helpers/BaseUrl'
+import { getToken } from 'src/helpers/RetriveToken'
 const UsersList = () => {
   const [filteredUsers, setFilteredUsers] = useState([])
   const [filters, setFilters] = useState({
@@ -29,9 +30,23 @@ const UsersList = () => {
   })
 
   //fetch users
-  const fetchUsers = async () => {
+  const token = getToken()
+  const fetchUsers = async (token) => {
     try {
-      const response = await axios.get(`${baseUrl}/dashboard/users`)
+      const response = await axios.get(`${baseUrl}/dashboard/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          Accept: 'application/json', // Specify the accepted response type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setFilteredUsers(response.data)
     } catch (error) {
       console.error('Error fetching users:', error)
@@ -39,8 +54,8 @@ const UsersList = () => {
     }
   }
   useEffect(() => {
-    fetchUsers()
-  }, []) // Run this effect only once (on component mount)
+    fetchUsers(token)
+  }, [token]) // Run this effect only once (on component mount)
   // Update filters for Full Name input change
   const handleFullNameChange = (e) => {
     setFilters({ ...filters, fullName: e.target.value })

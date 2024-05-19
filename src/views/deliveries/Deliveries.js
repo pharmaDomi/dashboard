@@ -25,12 +25,29 @@ const DeliveriesList = () => {
     fromPharmacy: '',
     status: '',
   })
+  const getToken = () => {
+    return localStorage.getItem('token')
+  }
 
   useEffect(() => {
     // Function to fetch deliveries
     const fetchDeliveries = async () => {
+      const token = getToken()
       try {
-        const response = await axios.get(`${baseUrl}/deliveries`)
+        const response = await axios.get(`${baseUrl}/deliveries`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-Content-Type-Options': 'nosniff',
+            'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+            'X-Frame-Options': 'DENY',
+            'X-XSS-Protection': '1; mode=block',
+            'Referrer-Policy': 'no-referrer',
+            'Cache-Control': 'no-store',
+          },
+        })
+
         setFilteredDeliveries(response.data)
         console.log(response.data)
       } catch (error) {

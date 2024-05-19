@@ -38,8 +38,12 @@ const AddDeliveryPerson = () => {
   const showSuccessAlert = (message) => {
     alert(`Success: ${message}`)
   }
-
+  const getToken = () => {
+    return localStorage.getItem('token')
+  }
   const handleSubmit = async () => {
+    const token = getToken()
+
     try {
       setLoading(true)
 
@@ -52,7 +56,21 @@ const AddDeliveryPerson = () => {
       const response = await axios.post(
         `${baseUrl}/deliveries/createDeliveryPerson`,
         deliveryPersonData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'X-Content-Type-Options': 'nosniff',
+            'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+            'X-Frame-Options': 'DENY',
+            'X-XSS-Protection': '1; mode=block',
+            'Referrer-Policy': 'no-referrer',
+            'Cache-Control': 'no-store',
+          },
+        },
       )
+
       console.log('Response:', response.data)
 
       // Show success message

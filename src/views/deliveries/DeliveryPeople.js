@@ -16,6 +16,7 @@ import {
 } from '@coreui/react'
 import axios from 'axios'
 import { baseUrl } from 'src/helpers/BaseUrl'
+import { getToken } from 'src/helpers/RetriveToken'
 
 const DeliveryPeopleList = () => {
   const [filteredDeliveryPeople, setFilteredDeliveryPeople] = useState([])
@@ -25,8 +26,22 @@ const DeliveryPeopleList = () => {
     phone: '',
   })
   const fetchDeliveryPeople = async () => {
+    const token = getToken()
     try {
-      const response = await axios.get(`${baseUrl}/deliveries/deliveryPeople`)
+      const response = await axios.get(`${baseUrl}/deliveries/deliveryPeople`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          'Content-Type': 'application/json', // Specify the content type
+          Accept: 'application/json', // Specify the accepted response type
+          'X-Content-Type-Options': 'nosniff', // Prevent MIME-sniffing
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', // Enforce HTTPS
+          'X-Frame-Options': 'DENY', // Prevent clickjacking
+          'X-XSS-Protection': '1; mode=block', // Enable XSS protection
+          'Referrer-Policy': 'no-referrer', // Control referrer information
+          'Cache-Control': 'no-store', // Prevent caching of sensitive data
+        },
+      })
+
       setFilteredDeliveryPeople(response.data)
       console.log(response.data)
     } catch (error) {
